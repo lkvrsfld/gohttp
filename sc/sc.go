@@ -1,61 +1,71 @@
 package sc
 
 import (
-	"fmt"
 //	"log"
 //	"net/http"
 	"net/url"
+	"errors"
 )
 
-func ParseUrl(scurl string, t string) (string, int){		
-
-	if(t == "body"){
-		fmt.Println("BDOY")
-
-	}
-	if(t == "params"){
-		fmt.Println("PARAMS")
-
-	}
-
-// check if there is even anything
-	if(scurl == ""){
-		fmt.Errorf("URL IS EMPTY")
-	}
+func ParseUrl(scurl string) (string, error){		
 //start our url parser
 	parse, err := url.Parse(scurl)
 	if(err !=  nil){
-		return err.Error(), 400
+		return "", errors.New("couldn't parse!")
 	}
 
-	// scheme is "https://, http://, ftp://"
-	scheme := parse.Scheme
-	//host 
+	scheme := parse.Scheme 
 	host := parse.Host
-
-	//path
 	path := parse.Path
 
+
+	//here we check for an existent host (no matter what)
 	if(host == ""){
-		return "URL is invalid", 400
+		return "", errors.New("URL is invalid")
 	}
+
+	//here we check if the url is https
 	if(scheme != "https"){
-		return "URL is invalid, try HTTPS", 400
+		return "", errors.New("URL is invalid, try HTTPS")
 	}
+
+	//here we check for an existent directory/parameters
 	if(path == ""){
-		return "URL is invalid, nothing after the /", 400
+		return "", errors.New("URL is invalid, nothing after the /") 
 	}
 
-
-
-
+// ToDo - implement soundcloud valid parsing
 
 
 	parsedUrl := parse.String()
 
-	fmt.Println(parsedUrl)
-	return parsedUrl, 200
+	return parsedUrl, nil
 }
 
 
 
+func getDownloadType(url string) string {
+
+	
+
+
+/*
+
+
+
+// SEARCH A SINGLE SONG
+https://soundcloud.com/tiapyne/carta-de-f-banda-fly
+
+// THIS IS AN ARTIST
+https://soundcloud.com/djneck
+
+// PLAYLIST
+https://soundcloud.com/nemobaert/sets/industrial-techno
+
+
+
+// FROM FEATURED / HOME
+https://soundcloud.com/discover/sets/personalized-tracks::luke-eversfield:1007363863
+*/
+
+}

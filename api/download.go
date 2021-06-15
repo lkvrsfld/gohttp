@@ -1,79 +1,58 @@
 package api
 
 import (
-	"encoding/json"
+	"errors"
 	"fmt"
 	sc "goscdl/sc"
-	"io/ioutil"
 	"net/http"
 )
-type Scurl struct {
-	Url	string	`json:"url"`
-}
 
 func downloadHandler(w http.ResponseWriter, r *http.Request) {
 	
-	// Read body
-		
-		body, err := getBody(w,r)
+	//here we check if our request has valid parameters.
+	param, err := checkUrlParam(w,r)
+	if err != nil {
+		http.Error(w, err.Error(), 400)
+		return
+	}
 
-		if err != nil {
-			fmt.Println("NO BODY DETECTED, LETS TRY PARAMS")
-			param, errnew := getParams(w,r)
-			if errnew != nil {
-				http.Error(w, err.Error(), 500)
-			}
+	//Here we will parse it for Soundclouid
+	parsedString, err := sc.ParseUrl(param)
+	if(err != nil){
+		http.Error(w, err.Error(), 400)
+		return
+	}
 
-			parsedString, statuscode := sc.ParseUrl(param, "params")
-			if(statuscode == 200){
-				w.Header().Set("Content-Type", "text/plain")
-				w.Write([]byte(parsedString))
-			}else{
-				http.Error(w, parsedString, statuscode)
-			}
-
-	
+	w.Header().Set("Content-Type", "text/plain")
+	w.Write([]byte(parsedString))
 			
-		}else{
-
-		parsedString, statuscode := sc.ParseUrl(body.Url, "body")
-		if(statuscode == 200){
-			w.Header().Set("Content-Type", "text/plain")
-			w.Write([]byte(parsedString))
-		}else{
-			http.Error(w, parsedString, statuscode)
-		}
-
-		}
-        return
-	
-
 
 }
-func getBody(w http.ResponseWriter, r *http.Request) (Scurl, error) {
-	var scurl Scurl
-	b, err := ioutil.ReadAll(r.Body)
 
 
-	defer r.Body.Close()
-	if err != nil {
-		http.Error(w, err.Error(), 500) 
-		return scurl, err
-	}
 
-	// Unmarshal
+
+
+
+
+func checkUrlParam(w http.ResponseWriter, r *http.Request)(string, error)  {
+	//fmt.Println(r.URL.Query()["url"][0])
 	
-	err = json.Unmarshal(b, &scurl)
-	if err != nil {
-		return scurl, err
+	if(len(r.URL.Query()["url"]) < 1){
+		fmt.Println("KEY IS NONEXISTENT")
+		err := errors.New("no url parameter is given")
+		return "", err
 	}
-	return scurl, nil
-}
 
-func getParams(w http.ResponseWriter, r *http.Request)(string, error)  {
-	fmt.Println("HERE IS THE PARAM")
-	fmt.Println(r.URL.Query()["url"][0])
+	
+	if(len(r.URL.Query()["url"][0]) < 1){
+		fmt.Println("URLPARAM IS NULL")
+		err := errors.New("no url was given")
+		
+		return "", err
+	}
+
 	return r.URL.Query()["url"][0], nil
-
 }
+
 
