@@ -5,11 +5,13 @@ import (
 	"net/http"
 )
 
+type Middleware func(http.Handler) http.Handler
+
 type Api struct {
 	Addr 		string 
 	server 		*http.Server
 	multiplexer *http.ServeMux
-	middleware []func(http.Handler) http.Handler
+	middleware  []Middleware
 }
 
 
@@ -55,8 +57,8 @@ func (api *Api) InitHandlers() (*http.ServeMux,error) {
 }
 
 // registers all middleware and writes to api.middlewares
-func (api *Api) InitMiddleware() ([]func(http.Handler) http.Handler, error) {
-	var middleware []func(http.Handler) http.Handler
+func (api *Api) InitMiddleware() ([]Middleware, error) {
+	var middleware []Middleware
 	
 	middleware = append(middleware,RateLimitMiddleware)
 
@@ -65,6 +67,8 @@ func (api *Api) InitMiddleware() ([]func(http.Handler) http.Handler, error) {
 }
 
 // main handle function, iterates through all middleware from first to last, and handles the route
+
+// solution: https://github.com/karankumarshreds/GoMiddlewares/blob/main/chain.go
 func (api *Api) Handle(h http.Handler) http.Handler {
 	var context = h
 	for _, middleware := range api.middleware {
