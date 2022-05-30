@@ -1,7 +1,14 @@
 package main
 
-import "goscdl/api"
 
+var api  = Api{
+	Addr: ":8080",
+}
 func main() {
-	api.RunServ(":8081")
+	if err := api.init(); err != nil {
+		panic(err)
+	}
+	if err := api.Start(); err != nil {
+		panic(err)
+	}
 }
