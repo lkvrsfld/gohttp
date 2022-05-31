@@ -36,5 +36,5 @@ func (api *Api) init() error {
 // starts the server with listenAndServe
 func (api *Api) Start() error {
 	return api.server.ListenAndServe()
-}
 
+}
