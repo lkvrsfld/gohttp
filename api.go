@@ -11,7 +11,7 @@ type Api struct {
 	middleware  MiddlewareChain
 }
 
-func (api *Api) init() error {
+func (api *Api) Init() error {
 	var err error
 	// init middleware
 	err = api.InitMiddleware()
