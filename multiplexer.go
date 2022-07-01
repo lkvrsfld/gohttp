@@ -3,12 +3,14 @@ package main
 import "net/http"
 
 // registers all handlers to api.multiplexer
-func InitMultiplexer() (*http.ServeMux, error) {
-	multiplexer := http.NewServeMux()
 
-	multiplexer.Handle("/", api.middleware.Handle(http.HandlerFunc(okHandler)))
-	multiplexer.Handle("/err", api.middleware.Handle(http.HandlerFunc(errorHandler)))
-	return multiplexer, nil
+func (api *Api)InitMultiplexer() (error) {
+	api.multiplexer = http.NewServeMux()
+
+	api.multiplexer.Handle("/", api.middleware.Handle(http.HandlerFunc(okHandler)))
+	api.multiplexer.Handle("/err", api.middleware.Handle(http.HandlerFunc(errorHandler)))
+
+	return nil
 }
 
 func okHandler(w http.ResponseWriter, r *http.Request) {

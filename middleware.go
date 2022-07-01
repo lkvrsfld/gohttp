@@ -9,12 +9,10 @@ type Middleware func(http.Handler) http.Handler
 type MiddlewareChain []Middleware
 
 // registers all middleware and writes to api.middlewares
-func InitMiddleware() (MiddlewareChain, error) {
-	var middlewareChain MiddlewareChain
+func (api *Api)InitMiddleware() error {
+	api.middleware = append(api.middleware, RateLimitMiddleware)
 
-	middlewareChain = append(middlewareChain, RateLimitMiddleware)
-
-	return middlewareChain, nil
+	return nil
 }
 
 func RateLimitMiddleware(h http.Handler) http.Handler {

@@ -14,13 +14,13 @@ type Api struct {
 func (api *Api) init() error {
 	var err error
 	// init middleware
-	api.middleware, err = InitMiddleware()
+	err = api.InitMiddleware()
 	if err != nil {
 		return err
 	}
 
 	// init handlers
-	api.multiplexer, err = InitMultiplexer()
+	err = api.InitMultiplexer()
 	if err != nil {
 		return err
 	}
