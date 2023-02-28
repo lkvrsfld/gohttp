@@ -20,5 +20,5 @@ func okHandler(w http.ResponseWriter, r *http.Request) {
 
 func errorHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusServiceUnavailable)
-	w.Write([]byte("Hello! Unavailable"))
+	w.Write([]byte("Unavailable"))
 }

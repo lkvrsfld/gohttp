@@ -2,20 +2,13 @@
 
 basic go http server using only net/http package.
 
-This is a Template for me, myself and I
+This is a Template for myself
 
-# multiplexer
+# multiplexer.go
 
 add routes and it's functions over here. keep main.go and api.go clean.
 
-# middleware
+# middleware.go
 
-add middleware as a function over here. Don't forget to append it in the init Function.
-
-# ToDo:
-
-## middleware
-    - middleware chain should be different per route (if needeed)
-    
-## router / multiplexer
-    - should do things
+add middleware as a handler function over here. 
+append it to the init function 

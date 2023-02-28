@@ -1,11 +1,12 @@
 package main
 
 var api = Api{
-	Addr: ":8080",
+	Host: "127.0.0.1",
+	Port: "8080",
 }
 
 func main() {
-	if err := api.init(); err != nil {
+	if err := api.Init(); err != nil {
 		panic(err)
 	}
 	if err := api.Start(); err != nil {

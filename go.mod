@@ -1,5 +1,3 @@
-module goscdl
+module gohttp
 
-go 1.15
-
-// NO DEPENDENCIES ALLOWED
+go 1.20
